@@ -4,8 +4,13 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 import streamlit as st
-import plotly.express as px
-import plotly.graph_objects as go
+
+try:
+    import plotly.express as px
+    import plotly.graph_objects as go
+    HAS_PLOTLY = True
+except ImportError:
+    HAS_PLOTLY = False
 
 # ==============================================================================
 # 1. Page Configuration & Theme
@@ -398,26 +403,29 @@ with col_results:
             
         df_top5 = pd.DataFrame(top5_data)
         
-        fig = px.bar(
-            df_top5,
-            x="Probability (%)",
-            y="Class",
-            orientation="h",
-            color="Status",
-            color_discrete_map={"Fresh": "#10b981", "Spoiled": "#ef4444"},
-            text=df_top5["Probability (%)"].apply(lambda v: f"{v:.1f}%")
-        )
-        fig.update_layout(
-            paper_bgcolor="rgba(0,0,0,0)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(color="#f8fafc", family="Inter"),
-            margin=dict(l=0, r=20, t=10, b=10),
-            height=240,
-            xaxis=dict(showgrid=True, gridcolor="#334155", range=[0, 100]),
-            yaxis=dict(autorange="reversed", title="")
-        )
-        fig.update_traces(textposition="outside", cliponaxis=False)
-        st.plotly_chart(fig, use_container_width=True)
+        if HAS_PLOTLY:
+            fig = px.bar(
+                df_top5,
+                x="Probability (%)",
+                y="Class",
+                orientation="h",
+                color="Status",
+                color_discrete_map={"Fresh": "#10b981", "Spoiled": "#ef4444"},
+                text=df_top5["Probability (%)"].apply(lambda v: f"{v:.1f}%")
+            )
+            fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(color="#f8fafc", family="Inter"),
+                margin=dict(l=0, r=20, t=10, b=10),
+                height=240,
+                xaxis=dict(showgrid=True, gridcolor="#334155", range=[0, 100]),
+                yaxis=dict(autorange="reversed", title="")
+            )
+            fig.update_traces(textposition="outside", cliponaxis=False)
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.bar_chart(df_top5.set_index("Class")["Probability (%)"])
 
 st.markdown("---")
 st.caption("FreshHarvest Cold Storage Quality Assurance System • Built with Streamlit & TensorFlow ResNet50")
