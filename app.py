@@ -131,8 +131,27 @@ CLASS_DISPLAY = {
 }
 
 # ==============================================================================
-# 3. Model Loader (Cached & Resilient)
+# 3. Model Loader (Cached & Resilient with GitHub Release Auto-Download)
 # ==============================================================================
+GITHUB_RELEASE_URL = "https://github.com/ridwanenam/FreshHarvest-Fruit-Inspection/releases/download/v1.0.0/resnet50_freshharvest_transfer_model.keras"
+
+def download_model_from_release(target_path="models/resnet50_freshharvest_transfer_model.keras", url=GITHUB_RELEASE_URL):
+    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+    try:
+        import requests
+        with st.spinner("📦 Mengunduh model weights ResNet50 dari GitHub Release (v1.0.0)... Mohon tunggu sebentar."):
+            response = requests.get(url, stream=True, timeout=120)
+            if response.status_code == 200:
+                with open(target_path, "wb") as f:
+                    for chunk in response.iter_content(chunk_size=1024 * 1024):
+                        if chunk:
+                            f.write(chunk)
+                return True, "Download successful."
+            else:
+                return False, f"HTTP {response.status_code}: File model belum ditemukan di Release v1.0.0."
+    except Exception as e:
+        return False, str(e)
+
 @st.cache_resource(show_spinner="Loading ResNet50 Transfer Learning Model...")
 def load_model_pipeline():
     candidate_paths = [
@@ -143,12 +162,22 @@ def load_model_pipeline():
     ]
     model_path = None
     for p in candidate_paths:
-        if os.path.exists(p):
+        if os.path.exists(p) and os.path.getsize(p) > 1000000:
             model_path = p
             break
             
     if not model_path:
-        return None, f"Model file not found. Checked paths: {candidate_paths}"
+        target_path = "models/resnet50_freshharvest_transfer_model.keras"
+        success, dl_msg = download_model_from_release(target_path)
+        if success:
+            model_path = target_path
+        else:
+            return None, (
+                f"Model file tidak ditemukan secara lokal dan gagal diunduh otomatis ({dl_msg}). "
+                "Silakan pastikan Anda telah membuat Release dengan tag 'v1.0.0' di repository "
+                "https://github.com/ridwanenam/FreshHarvest-Fruit-Inspection dan mengunggah "
+                "'resnet50_freshharvest_transfer_model.keras' ke release tersebut."
+            )
         
     try:
         import tensorflow as tf

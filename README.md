@@ -85,8 +85,8 @@ Dense (16, Softmax) -> 16-Class Probabilities
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/ridwanenam/FreshHarvest-Fruit-Inspection-AI.git
-cd FreshHarvest-Fruit-Inspection-AI
+git clone https://github.com/ridwanenam/FreshHarvest-Fruit-Inspection.git
+cd FreshHarvest-Fruit-Inspection
 ```
 
 ### 2. Create and Activate Virtual Environment
