@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C libraries
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Large model files (>100MB exceeds standard GitHub push limit)
+# The trained model weights are saved in models/ or downloadable via release
+*.keras
+*.h5
+*.tflite
+models/*.keras
+models/*.h5
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
