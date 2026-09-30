@@ -217,7 +217,7 @@ if model is None:
 # ==============================================================================
 # 6. Main Inputs
 # ==============================================================================
-col_input, col_results = st.columns([1.1, 1.3], gap="large")
+col_input, col_results = st.columns([1, 1], gap="large")
 
 with col_input:
     st.markdown("### Upload Image")
@@ -296,6 +296,7 @@ with col_results:
             
         badge_class = "status-fresh" if is_fresh else "status-spoiled"
         status_label = meta['status'].upper()
+        bar_color = "#10b981" if is_fresh else "#ef4444"
         
         st.markdown(f"""
         <div style="background:#1e293b; border:1px solid #334155; border-radius:10px; padding:20px; margin-bottom:16px;">
@@ -317,7 +318,7 @@ with col_results:
                     <span style="font-weight:700; color:#ffffff;">{confidence:.2f}%</span>
                 </div>
                 <div style="background:#334155; height:8px; border-radius:4px; overflow:hidden;">
-                    <div style="width:{min(confidence, 100):.1f}%; height:100%; background:#10b981 if is_fresh else #ef4444; border-radius:4px;"></div>
+                    <div style="width:{min(confidence, 100):.1f}%; height:100%; background:{bar_color}; border-radius:4px;"></div>
                 </div>
             </div>
             <div style="font-size:12px; color:#94a3b8; margin-top:10px;">
@@ -326,7 +327,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # Action Notice using native Streamlit alerts (clean, no raw HTML code)
+        # Action Notice using native Streamlit alerts
         if is_fresh:
             st.success("Action: Fruit is fresh. Approved for packaging and distribution.")
         else:
@@ -360,7 +361,7 @@ with col_results:
                 plot_bgcolor="rgba(0,0,0,0)",
                 font=dict(color="#f8fafc"),
                 margin=dict(l=0, r=20, t=10, b=10),
-                height=220,
+                height=200,
                 xaxis=dict(showgrid=True, gridcolor="#334155", range=[0, 100]),
                 yaxis=dict(autorange="reversed", title="")
             )
@@ -368,6 +369,38 @@ with col_results:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.bar_chart(df_top5.set_index("Class")["Probability (%)"])
+
+        # Quality Details Cards to balance the layout symmetrically
+        st.markdown("#### Quality Details")
+        col_q1, col_q2 = st.columns(2)
+        with col_q1:
+            q_status_text = "Passed (Grade A)" if is_fresh else "Failed (Defective)"
+            q_status_desc = "Meets quality standards" if is_fresh else "Decay detected"
+            st.markdown(f"""
+            <div class="kpi-card">
+                <div class="kpi-label">Inspection Status</div>
+                <div style="font-size:15px; font-weight:700; color:{bar_color}; margin-top:4px;">
+                    {q_status_text}
+                </div>
+                <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
+                    {q_status_desc}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_q2:
+            q_action_text = "Cold Storage Room" if is_fresh else "Dispose / Segregate"
+            q_action_desc = "Temp: 1°C - 4°C" if is_fresh else "Immediate isolation"
+            st.markdown(f"""
+            <div class="kpi-card">
+                <div class="kpi-label">Storage Handling</div>
+                <div style="font-size:15px; font-weight:700; color:#f8fafc; margin-top:4px;">
+                    {q_action_text}
+                </div>
+                <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
+                    {q_action_desc}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("FreshHarvest Quality Inspection - Streamlit and TensorFlow ResNet50")
