@@ -4,6 +4,12 @@ This project is an image classification application built for FreshHarvest Logis
 
 ---
 
+## Live Demo
+
+https://freshharvest-fruit-inspection.streamlit.app/
+
+---
+
 ## Project Overview
 
 In fresh produce logistics, checking fruit quality manually is slow and can lead to errors. This project provides an automated image classification tool:
@@ -56,73 +62,5 @@ The transfer learning model consists of:
 
 ---
 
-## How to Run Locally
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/ridwanenam/FreshHarvest-Fruit-Inspection.git
-cd FreshHarvest-Fruit-Inspection
-```
-
-### 2. Create Virtual Environment
-```bash
-# Windows
-python -m venv venv
-.\venv\Scripts\activate
-
-# macOS / Linux
-python3 -m venv venv
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Model File
-Place the trained model file `resnet50_freshharvest_transfer_model.keras` inside the `models/` directory:
-```
-FreshHarvest-Fruit-Inspection/
-└── models/
-    └── resnet50_freshharvest_transfer_model.keras
-```
-Note: If running on Streamlit Cloud, the application will automatically download the model from GitHub Release v1.0.0 if not present locally.
-
-### 5. Run Streamlit App
-```bash
-streamlit run app.py
-```
-
----
-
-## Repository Structure
-
-```
-FreshHarvest-Fruit-Inspection/
-├── .streamlit/
-│   └── config.toml
-├── assets/
-│   └── samples/
-│       ├── fresh_banana.jpg
-│       ├── fresh_orange.jpg
-│       ├── fresh_strawberry.jpg
-│       ├── spoiled_banana.jpg
-│       ├── spoiled_orange.jpg
-│       └── spoiled_strawberry.jpg
-├── models/
-│   └── resnet50_freshharvest_transfer_model.keras
-├── notebook/
-│   └── freshharvest-logistics (2).ipynb
-├── .gitignore
-├── app.py
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Author
-
-* Ridwan Triputra (GitHub: @ridwanenam)
-* Codebasics Virtual Bootcamp - FreshHarvest Logistics
+**Associated with:** <br>
+► Codebasics
