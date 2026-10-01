@@ -259,11 +259,13 @@ with col_input:
                 break
                 
     if target_image is not None:
-        st.image(
-            target_image, 
-            caption=f"Input Image: {source_name} ({target_image.width}x{target_image.height} px)", 
-            use_container_width=True
-        )
+        col_img_pad1, col_img_core, col_img_pad2 = st.columns([1, 8, 1])
+        with col_img_core:
+            st.image(
+                target_image, 
+                caption=f"Input Image: {source_name} ({target_image.width}x{target_image.height} px)", 
+                width=300
+            )
     else:
         st.info("Upload an image or pick a sample to start inspection.")
 
@@ -357,16 +359,17 @@ with col_results:
                 text=df_top5["Probability (%)"].apply(lambda v: f"{v:.1f}%")
             )
             fig.update_layout(
+                showlegend=False,
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="#f8fafc"),
-                margin=dict(l=0, r=20, t=10, b=10),
-                height=200,
-                xaxis=dict(showgrid=True, gridcolor="#334155", range=[0, 100]),
+                font=dict(color="#f8fafc", size=12),
+                margin=dict(l=0, r=40, t=10, b=10),
+                height=190,
+                xaxis=dict(showgrid=True, gridcolor="#334155", range=[0, 118], title=""),
                 yaxis=dict(autorange="reversed", title="")
             )
             fig.update_traces(textposition="outside", cliponaxis=False)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
         else:
             st.bar_chart(df_top5.set_index("Class")["Probability (%)"])
 
@@ -398,6 +401,32 @@ with col_results:
                 </div>
                 <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
                     {q_action_desc}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        col_q3, col_q4 = st.columns(2)
+        with col_q3:
+            st.markdown(f"""
+            <div class="kpi-card">
+                <div class="kpi-label">Detected Fruit</div>
+                <div style="font-size:15px; font-weight:700; color:#ffffff; margin-top:4px;">
+                    {meta['fruit']}
+                </div>
+                <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
+                    Code: {pred_code}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_q4:
+            st.markdown(f"""
+            <div class="kpi-card">
+                <div class="kpi-label">Inspection Speed</div>
+                <div style="font-size:15px; font-weight:700; color:#ffffff; margin-top:4px;">
+                    {latency_ms:.1f} ms
+                </div>
+                <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
+                    ResNet50 Backbone
                 </div>
             </div>
             """, unsafe_allow_html=True)
