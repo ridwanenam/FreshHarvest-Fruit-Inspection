@@ -259,13 +259,11 @@ with col_input:
                 break
                 
     if target_image is not None:
-        col_img_pad1, col_img_core, col_img_pad2 = st.columns([1, 8, 1])
-        with col_img_core:
-            st.image(
-                target_image, 
-                caption=f"Input Image: {source_name} ({target_image.width}x{target_image.height} px)", 
-                width=300
-            )
+        st.image(
+            target_image, 
+            caption=f"Input Image: {source_name} ({target_image.width}x{target_image.height} px)", 
+            use_container_width=True
+        )
     else:
         st.info("Upload an image or pick a sample to start inspection.")
 
